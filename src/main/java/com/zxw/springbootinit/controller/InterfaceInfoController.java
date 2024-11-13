@@ -2,18 +2,21 @@ package com.zxw.springbootinit.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
+import com.zxw.openapiclientsdk.client.openApiClient;
 import com.zxw.springbootinit.annotation.AuthCheck;
-import com.zxw.springbootinit.common.BaseResponse;
-import com.zxw.springbootinit.common.DeleteRequest;
-import com.zxw.springbootinit.common.ErrorCode;
-import com.zxw.springbootinit.common.ResultUtils;
+import com.zxw.springbootinit.common.*;
 import com.zxw.springbootinit.constant.CommonConstant;
+import com.zxw.springbootinit.constant.UserConstant;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoAddRequest;
+import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.zxw.springbootinit.model.entity.InterfaceInfo;
+
 import com.zxw.springbootinit.model.entity.User;
+import com.zxw.springbootinit.model.enums.InterfaceInfoStatusEnum;
 import com.zxw.springbootinit.service.InterfaceInfoService;
 import com.zxw.springbootinit.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 接口管理
@@ -38,7 +42,8 @@ public class InterfaceInfoController {
 
     @Resource
     private UserService userService;
-
+    @Resource
+    private openApiClient openApiClient;
 
     // region 增删改查
 
@@ -193,8 +198,94 @@ public class InterfaceInfoController {
         return ResultUtils.success(interfaceInfoPage);
     }
 
+    /**
+     * 发布接口
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/online")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> online(@RequestParam IdRequest idRequest, HttpServletRequest request) {
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        long id = idRequest.getId();
+        InterfaceInfo interfaceInfoServiceById = interfaceInfoService.getById(id);
+        if (interfaceInfoServiceById == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 校验接口是否可以调用
+        com.zxw.openapiclientsdk.model.User user = new com.zxw.openapiclientsdk.model.User();
+        user.setUsername("zxw");
+        String userNameByPost = openApiClient.getUserNameByPost(user);
+        System.out.println(userNameByPost);
+        if (!StringUtils.isBlank(userNameByPost)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
+        }
+        //修改数据库中的状态
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.ONLINE.getValue());
+        boolean UpdateInterfaceInfoStatusById = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(UpdateInterfaceInfoStatusById);
+    }
+
+    /**
+     * 下线接口
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> offline(@RequestParam IdRequest idRequest) {
+        // 参数校验
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        long id = idRequest.getId();
+        InterfaceInfo interfaceInfoServiceById = interfaceInfoService.getById(id);
+        if (interfaceInfoServiceById == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        //修改数据库中的状态
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
+        boolean UpdateInterfaceInfoStatusById = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(UpdateInterfaceInfoStatusById);
+    }
     // endregion
 
+    /**
+     * 在线测试调用接口
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest, HttpServletRequest request) {
+        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = interfaceInfoInvokeRequest.getId();
+        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+        User loginUser = userService.getLoginUser(request);
+        //判断接口是否可以调用
+        InterfaceInfo interfaceInfo = interfaceInfoService.getById(id);
+        if (interfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        if (interfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue()) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
+        }
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        com.zxw.openapiclientsdk.client.openApiClient NewopenApiClient = new openApiClient(accessKey, secretKey);
+        Gson gson = new Gson();
+        com.zxw.openapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.zxw.openapiclientsdk.model.User.class);
+        String userNameByPost = NewopenApiClient.getUserNameByPost(user);
+        return ResultUtils.success(userNameByPost);
+    }
 
 }
+
 

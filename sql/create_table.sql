@@ -2,26 +2,29 @@
 # -- 创建库
 # create database if not exists my_db;
 #
-# -- 切换库
-# use my_db;
+-- 切换库
+use openapi;
 #
-# -- 用户表
-# create table if not exists user
-# (
-#     id           bigint auto_increment comment 'id' primary key,
-#     userAccount  varchar(256)                           not null comment '账号',
-#     userPassword varchar(512)                           not null comment '密码',
-#     unionId      varchar(256)                           null comment '微信开放平台id',
-#     mpOpenId     varchar(256)                           null comment '公众号openId',
-#     userName     varchar(256)                           null comment '用户昵称',
-#     userAvatar   varchar(1024)                          null comment '用户头像',
-#     userProfile  varchar(512)                           null comment '用户简介',
-#     userRole     varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
-#     createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
-#     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-#     isDelete     tinyint      default 0                 not null comment '是否删除',
-#     index idx_unionId (unionId)
-# ) comment '用户' collate = utf8mb4_unicode_ci;
+-- 用户表
+create table if not exists user
+(
+    id           bigint auto_increment comment 'id' primary key,
+    userAccount  varchar(256)                           not null comment '账号',
+    userPassword varchar(512)                           not null comment '密码',
+    unionId      varchar(256)                           null comment '微信开放平台id',
+    mpOpenId     varchar(256)                           null comment '公众号openId',
+    userName     varchar(256)                           null comment '用户昵称',
+    userAvatar   varchar(1024)                          null comment '用户头像',
+    userProfile  varchar(512)                           null comment '用户简介',
+    `accessKey`  varchar(512)                           not null comment 'accessKey',
+    `secretKey`  varchar(512)                           not null comment 'secretKey',
+    userRole     varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
+    createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete     tinyint      default 0                 not null comment '是否删除',
+    constraint uni_userAccount
+        unique (userAccount)
+) comment '用户' collate = utf8mb4_unicode_ci;
 #
 # -- 帖子表
 # create table if not exists post
@@ -64,28 +67,28 @@
 # ) comment '帖子收藏';
 
 
--- 创建库
-create database if not exists openapi;
+# -- 创建库
+# create database if not exists openapi;
 
 -- 切换库
 use openapi;
 
--- 用户表
-create table if not exists user
-(
-    id           bigint auto_increment comment 'id' primary key,
-    userName     varchar(256)                           null comment '用户昵称',
-    userAccount  varchar(256)                           not null comment '账号',
-    userAvatar   varchar(1024)                          null comment '用户头像',
-    gender       tinyint                                null comment '性别',
-    userRole     varchar(256) default 'user'            not null comment '用户角色：user / admin',
-    userPassword varchar(512)                           not null comment '密码',
-    createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
-    updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    isDelete     tinyint      default 0                 not null comment '是否删除',
-    constraint uni_userAccount
-        unique (userAccount)
-) comment '用户';
+# -- 用户表
+# create table if not exists user
+# (
+#     id           bigint auto_increment comment 'id' primary key,
+#     userName     varchar(256)                           null comment '用户昵称',
+#     userAccount  varchar(256)                           not null comment '账号',
+#     userAvatar   varchar(1024)                          null comment '用户头像',
+#     gender       tinyint                                null comment '性别',
+#     userRole     varchar(256) default 'user'            not null comment '用户角色：user / admin',
+#     userPassword varchar(512)                           not null comment '密码',
+#     createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
+#     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+#     isDelete     tinyint      default 0                 not null comment '是否删除',
+#     constraint uni_userAccount
+#         unique (userAccount)
+# ) comment '用户';
 
 
 insert into openapi.`interface_info` (`name`, `description`, `url`, `requestHeader`, `responseHeader`, `status`,
@@ -148,34 +151,3 @@ values ('许涛', '陆致远', 'www.vella-ankunding.name', '贾哲瀚', '莫昊�
 insert into openapi.`interface_info` (`name`, `description`, `url`, `requestHeader`, `responseHeader`, `status`,
                                       `method`, `userId`)
 values ('吕峻熙', '沈鹏飞', 'www.shari-reichel.org', '郭鸿煊', '覃烨霖', 0, '熊黎昕', 493);
-
-
-# create function func_avg_price(cid varchar(50))
-#     returns decimal(10, 2)
-#
-# begin
-#     declare avg_price decimal(10, 2);
-#     select avg商品价格
-#     into avg_price
-#     from 商品表
-#     where 商品id = cid;
-#     return avg_price;
-# end;
-# select func_avg_price('1');
-#
-#
-# delimiter //
-#
-#
-# create function func_sum_price(cid varchar(50))
-#     returns decimal(10, 2)
-#
-# begin
-#     declare sum_price decimal(10, 2);
-#     select sum(价格*数量)
-#     into sum_price
-#     from 商品表
-#     where 商品id = cid;
-#     return sum_price;
-# end;
-# select func_sum_price('1');

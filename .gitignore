@@ -25,3 +25,6 @@ replay_pid*
 /target/
 /.idea/
 /.mvn/
+doc/swagger.png
+.DS_Store
+src/test/.DS_Store

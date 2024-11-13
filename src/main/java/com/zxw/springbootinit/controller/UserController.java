@@ -10,14 +10,10 @@ import com.zxw.springbootinit.config.WxOpenConfig;
 import com.zxw.springbootinit.constant.UserConstant;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.exception.ThrowUtils;
-import com.zxw.springbootinit.model.dto.user.UserAddRequest;
-import com.zxw.springbootinit.model.dto.user.UserLoginRequest;
-import com.zxw.springbootinit.model.dto.user.UserQueryRequest;
-import com.zxw.springbootinit.model.dto.user.UserRegisterRequest;
-import com.zxw.springbootinit.model.dto.user.UserUpdateMyRequest;
-import com.zxw.springbootinit.model.dto.user.UserUpdateRequest;
+import com.zxw.springbootinit.model.dto.user.*;
 import com.zxw.springbootinit.model.entity.User;
 import com.zxw.springbootinit.model.vo.LoginUserVO;
+import com.zxw.springbootinit.model.vo.UserUpdateSignVo;
 import com.zxw.springbootinit.model.vo.UserVO;
 import com.zxw.springbootinit.service.UserService;
 
@@ -44,8 +40,6 @@ import static com.zxw.springbootinit.service.impl.UserServiceImpl.SALT;
 
 /**
  * 用户接口
- *
- 
  */
 @RestController
 @RequestMapping("/user")
@@ -107,7 +101,7 @@ public class UserController {
      */
     @GetMapping("/login/wx_open")
     public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam("code") String code) {
+                                                       @RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
         try {
             WxMpService wxService = wxOpenConfig.getWxMpService();
@@ -207,7 +201,7 @@ public class UserController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-            HttpServletRequest request) {
+                                            HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -260,7 +254,7 @@ public class UserController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                   HttpServletRequest request) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size),
@@ -277,7 +271,7 @@ public class UserController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+                                                       HttpServletRequest request) {
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -304,7 +298,7 @@ public class UserController {
      */
     @PostMapping("/update/my")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+                                              HttpServletRequest request) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -315,5 +309,21 @@ public class UserController {
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
+    }
+
+    /**
+     * 用户可以更换公钥私钥
+     *
+     * @param
+     * @param request
+     * @return
+     */
+    @PostMapping("/update/sign")
+    public BaseResponse<UserUpdateSignVo> updateUserSign(HttpServletRequest request) {
+        if (request == null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        UserUpdateSignVo userUpdateSignVo = userService.updateUserSign(request);
+        return ResultUtils.success(userUpdateSignVo);
     }
 }

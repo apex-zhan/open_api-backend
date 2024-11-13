@@ -3,6 +3,7 @@ package com.zxw.springbootinit.service.impl;
 import static com.zxw.springbootinit.constant.UserConstant.USER_LOGIN_STATE;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zxw.springbootinit.common.ErrorCode;
@@ -13,13 +14,17 @@ import com.zxw.springbootinit.model.dto.user.UserQueryRequest;
 import com.zxw.springbootinit.model.entity.User;
 import com.zxw.springbootinit.model.enums.UserRoleEnum;
 import com.zxw.springbootinit.model.vo.LoginUserVO;
+import com.zxw.springbootinit.model.vo.UserUpdateSignVo;
 import com.zxw.springbootinit.model.vo.UserVO;
 import com.zxw.springbootinit.service.UserService;
 import com.zxw.springbootinit.utils.SqlUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -29,17 +34,17 @@ import org.springframework.util.DigestUtils;
 
 /**
  * 用户服务实现
- *
- 
  */
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Resource
+    private UserMapper userMapper;
     /**
      * 盐值，混淆密码
      */
-    public static final String SALT = "zxw";
+    public static final String SALT = "openapi";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -47,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
-        if (userAccount.length() < 4) {
+        if (userAccount.length() < 3) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号过短");
         }
         if (userPassword.length() < 8 || checkPassword.length() < 8) {
@@ -67,10 +72,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+            //分配公钥和私钥
+            String accessKey = DigestUtils.md5DigestAsHex((SALT + userAccount + RandomUtil.randomNumbers(5)).getBytes());
+            String secretKey = DigestUtils.md5DigestAsHex((SALT + userAccount + RandomUtil.randomNumbers(6)).getBytes());
             // 3. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
+            user.setAccessKey(accessKey);
+            user.setSecretKey(secretKey);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
@@ -85,7 +95,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
-        if (userAccount.length() < 4) {
+        if (userAccount.length() < 3) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号错误");
         }
         if (userPassword.length() < 8) {
@@ -94,10 +104,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 2. 加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
         // 查询用户是否存在
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
-        queryWrapper.eq("userPassword", encryptPassword);
-        User user = this.baseMapper.selectOne(queryWrapper);
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("userAccount", userAccount);
+        userQueryWrapper.eq("userPassword", encryptPassword);
+        User user = this.baseMapper.selectOne(userQueryWrapper);
+
         // 用户不存在
         if (user == null) {
             log.info("user login failed, userAccount cannot match userPassword");
@@ -268,4 +279,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 sortField);
         return queryWrapper;
     }
+
+    /**
+     * 重新生成新的公钥和密钥
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public UserUpdateSignVo updateUserSign(HttpServletRequest request) {
+        User loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        User user = userMapper.selectById(loginUser.getId());
+        String userAccount = user.getUserAccount();
+        //分配公钥和私钥
+        String accessKey = DigestUtils.md5DigestAsHex((SALT + userAccount + RandomUtil.randomNumbers(5)).getBytes());
+        String secretKey = DigestUtils.md5DigestAsHex((SALT + userAccount + RandomUtil.randomNumbers(6)).getBytes());
+        user.setAccessKey(accessKey);
+        user.setSecretKey(secretKey);
+        //将新的公钥和私钥更新到user对象中
+        boolean updateById = updateById(user);
+        if (!updateById) {
+            log.error("更新用户的公钥私钥失败");
+        }
+        // 返回更新后的公钥和密钥
+        UserUpdateSignVo userUpdateSignVo = new UserUpdateSignVo();
+        userUpdateSignVo.setAccessKey(accessKey);
+        userUpdateSignVo.setSecretKey(secretKey);
+        return userUpdateSignVo;
+    }
+
+
 }

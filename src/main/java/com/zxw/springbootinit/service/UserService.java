@@ -5,15 +5,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zxw.springbootinit.model.dto.user.UserQueryRequest;
 import com.zxw.springbootinit.model.entity.User;
 import com.zxw.springbootinit.model.vo.LoginUserVO;
+import com.zxw.springbootinit.model.vo.UserUpdateSignVo;
 import com.zxw.springbootinit.model.vo.UserVO;
+
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 
 /**
  * 用户服务
- *
- 
  */
 public interface UserService extends IService<User> {
 
@@ -117,4 +118,6 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+
+    UserUpdateSignVo updateUserSign(HttpServletRequest request);
 }
