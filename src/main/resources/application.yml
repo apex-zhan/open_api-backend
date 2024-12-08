@@ -104,3 +104,21 @@ openapi:
   client:
     access-key: 123
     secret-key: 123
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+
+dubbo:
+  application:
+    name: open_api-backend
+  protocol:
+    host: 127.0.0.1
+    name: dubbo
+    port: -1    # 随机端口
+  registry:
+      address: nacos://localhost:8848
+      id: nacos-registry
+  cache:
+        # 更改缓存目录
+    file: D:/mavenn/.m2/.dubbo
