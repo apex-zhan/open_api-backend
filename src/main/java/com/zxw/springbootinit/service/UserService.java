@@ -2,8 +2,8 @@ package com.zxw.springbootinit.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.model.dto.user.UserQueryRequest;
-import com.zxw.springbootinit.model.entity.User;
 import com.zxw.springbootinit.model.vo.LoginUserVO;
 import com.zxw.springbootinit.model.vo.UserUpdateSignVo;
 import com.zxw.springbootinit.model.vo.UserVO;

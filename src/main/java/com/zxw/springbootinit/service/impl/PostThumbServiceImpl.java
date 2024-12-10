@@ -2,12 +2,13 @@ package com.zxw.springbootinit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.mapper.PostThumbMapper;
 import com.zxw.springbootinit.model.entity.Post;
 import com.zxw.springbootinit.model.entity.PostThumb;
-import com.zxw.springbootinit.model.entity.User;
+
 import com.zxw.springbootinit.service.PostService;
 import com.zxw.springbootinit.service.PostThumbService;
 import javax.annotation.Resource;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 帖子点赞服务实现
  *
- 
  */
 @Service
 public class PostThumbServiceImpl extends ServiceImpl<PostThumbMapper, PostThumb>

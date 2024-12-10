@@ -1,15 +1,13 @@
 package com.zxw.springbootinit.service.impl;
 
-
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zxw.openapicommon.model.entity.UserInterfaceInfo;
 import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.mapper.UserInterfaceInfoMapper;
-import com.zxw.springbootinit.model.dto.user.UserInterfaceInfo;
 import com.zxw.springbootinit.service.UserInterfaceInfoService;
 import org.springframework.stereotype.Service;
-
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +32,7 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
      * @param add
      */
     @Override
-    public void validUserInterfaceInfo(UserInterfaceInfo userinterfaceInfo, boolean add) {
+    public void validUserInterfaceInfo(com.zxw.openapicommon.model.entity.UserInterfaceInfo userinterfaceInfo, boolean add) {
         if (userinterfaceInfo == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

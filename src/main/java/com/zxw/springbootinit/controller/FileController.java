@@ -1,6 +1,7 @@
 package com.zxw.springbootinit.controller;
 
 import cn.hutool.core.io.FileUtil;
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.common.BaseResponse;
 import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.common.ResultUtils;
@@ -8,7 +9,7 @@ import com.zxw.springbootinit.constant.FileConstant;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.manager.CosManager;
 import com.zxw.springbootinit.model.dto.file.UploadFileRequest;
-import com.zxw.springbootinit.model.entity.User;
+
 import com.zxw.springbootinit.model.enums.FileUploadBizEnum;
 import com.zxw.springbootinit.service.UserService;
 import java.io.File;
@@ -26,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 文件接口
  *
- 
  */
 @RestController
 @RequestMapping("/file")

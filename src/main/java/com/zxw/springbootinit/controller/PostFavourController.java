@@ -1,6 +1,7 @@
 package com.zxw.springbootinit.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.common.BaseResponse;
 import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.common.ResultUtils;
@@ -10,7 +11,7 @@ import com.zxw.springbootinit.model.dto.post.PostQueryRequest;
 import com.zxw.springbootinit.model.dto.postfavour.PostFavourAddRequest;
 import com.zxw.springbootinit.model.dto.postfavour.PostFavourQueryRequest;
 import com.zxw.springbootinit.model.entity.Post;
-import com.zxw.springbootinit.model.entity.User;
+
 import com.zxw.springbootinit.model.vo.PostVO;
 import com.zxw.springbootinit.service.PostFavourService;
 import com.zxw.springbootinit.service.PostService;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 帖子收藏接口
  *
- 
  */
 @RestController
 @RequestMapping("/post_favour")

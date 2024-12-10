@@ -1,11 +1,12 @@
 package com.zxw.springbootinit.controller;
 
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.common.BaseResponse;
 import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.common.ResultUtils;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.model.dto.postthumb.PostThumbAddRequest;
-import com.zxw.springbootinit.model.entity.User;
+
 import com.zxw.springbootinit.service.PostThumbService;
 import com.zxw.springbootinit.service.UserService;
 import javax.annotation.Resource;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 帖子点赞接口
  *
- 
  */
 @RestController
 @RequestMapping("/post_thumb")

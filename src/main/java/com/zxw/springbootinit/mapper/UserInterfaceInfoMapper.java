@@ -1,7 +1,7 @@
 package com.zxw.springbootinit.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zxw.springbootinit.model.dto.user.UserInterfaceInfo;
+import com.zxw.openapicommon.model.entity.UserInterfaceInfo;
 
 
 /**

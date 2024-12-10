@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.zxw.openapiclientsdk.client.openApiClient;
+import com.zxw.openapicommon.model.entity.InterfaceInfo;
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.annotation.AuthCheck;
 import com.zxw.springbootinit.common.*;
 import com.zxw.springbootinit.constant.CommonConstant;
@@ -13,9 +15,8 @@ import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.zxw.springbootinit.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
-import com.zxw.springbootinit.model.entity.InterfaceInfo;
 
-import com.zxw.springbootinit.model.entity.User;
+
 import com.zxw.springbootinit.model.enums.InterfaceInfoStatusEnum;
 import com.zxw.springbootinit.service.InterfaceInfoService;
 import com.zxw.springbootinit.service.UserService;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 接口管理
@@ -280,6 +280,7 @@ public class InterfaceInfoController {
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
         com.zxw.openapiclientsdk.client.openApiClient NewopenApiClient = new openApiClient(accessKey, secretKey);
+
         Gson gson = new Gson();
         com.zxw.openapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.zxw.openapiclientsdk.model.User.class);
         String userNameByPost = NewopenApiClient.getUserNameByPost(user);

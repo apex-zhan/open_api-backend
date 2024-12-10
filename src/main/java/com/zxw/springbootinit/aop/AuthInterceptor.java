@@ -1,9 +1,10 @@
 package com.zxw.springbootinit.aop;
 
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.annotation.AuthCheck;
 import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.exception.BusinessException;
-import com.zxw.springbootinit.model.entity.User;
+
 import com.zxw.springbootinit.model.enums.UserRoleEnum;
 import com.zxw.springbootinit.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -19,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 权限校验 AOP
- *
- 
  */
 @Aspect
 @Component

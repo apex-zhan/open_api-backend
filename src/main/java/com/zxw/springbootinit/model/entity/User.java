@@ -12,7 +12,7 @@ import lombok.Data;
 /**
  * 用户
  *
- 
+
  */
 @TableName(value = "user")
 @Data
@@ -48,6 +48,14 @@ public class User implements Serializable {
      * 用户昵称
      */
     private String userName;
+    /**
+     * 公钥
+     */
+    private String accessKey;
+    /**
+     * 私钥
+     */
+    private String secretKey;
 
     /**
      * 用户头像

@@ -1,6 +1,7 @@
 package com.zxw.springbootinit.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.annotation.AuthCheck;
 import com.zxw.springbootinit.common.BaseResponse;
 import com.zxw.springbootinit.common.DeleteRequest;
@@ -11,7 +12,7 @@ import com.zxw.springbootinit.constant.UserConstant;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.exception.ThrowUtils;
 import com.zxw.springbootinit.model.dto.user.*;
-import com.zxw.springbootinit.model.entity.User;
+
 import com.zxw.springbootinit.model.vo.LoginUserVO;
 import com.zxw.springbootinit.model.vo.UserUpdateSignVo;
 import com.zxw.springbootinit.model.vo.UserVO;

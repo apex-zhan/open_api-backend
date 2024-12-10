@@ -3,6 +3,7 @@ package com.zxw.springbootinit.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zxw.openapicommon.model.entity.User;
 import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.constant.CommonConstant;
 import com.zxw.springbootinit.exception.BusinessException;
@@ -15,7 +16,6 @@ import com.zxw.springbootinit.model.dto.post.PostQueryRequest;
 import com.zxw.springbootinit.model.entity.Post;
 import com.zxw.springbootinit.model.entity.PostFavour;
 import com.zxw.springbootinit.model.entity.PostThumb;
-import com.zxw.springbootinit.model.entity.User;
 import com.zxw.springbootinit.model.vo.PostVO;
 import com.zxw.springbootinit.model.vo.UserVO;
 import com.zxw.springbootinit.service.PostService;
@@ -48,8 +48,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * 帖子服务实现
- *
- 
  */
 @Service
 @Slf4j
@@ -305,7 +303,3 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
 }
-
-
-
-
