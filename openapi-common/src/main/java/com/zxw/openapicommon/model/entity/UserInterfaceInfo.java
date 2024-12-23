@@ -1,4 +1,4 @@
-package com.zxw.springbootinit.model.entity;
+package com.zxw.openapicommon.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;

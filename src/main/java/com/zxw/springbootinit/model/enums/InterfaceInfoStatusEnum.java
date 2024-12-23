@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
  * 接口状态
  */
 public enum InterfaceInfoStatusEnum {
-    ONLINE("在线", 0),
+    ONLINE("在线", 1),
 
-    OFFLINE("下线", 1);
+    OFFLINE("下线", 0);
 
     private final String text;
 

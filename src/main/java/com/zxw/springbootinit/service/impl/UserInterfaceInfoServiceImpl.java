@@ -78,6 +78,29 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         }
         return false;
     }
+
+    /**
+     * 校验是否有剩余次数
+     *
+     * @param interfaceInfoId
+     * @param userId
+     * @return
+     */
+//    @Override
+//    public boolean hasRemainingCalls(long interfaceInfoId, long userId) {
+//        if (userId <= 0 || interfaceInfoId <= 0) {
+//            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+//        }
+//        QueryWrapper<UserInterfaceInfo> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("interfaceInfoId", interfaceInfoId);
+//        queryWrapper.eq("userId", userId);
+//        queryWrapper.gt("leftNum", 0);
+//
+//        // 查询数据库，判断是否有剩余调用次数
+//        long count = this.count(queryWrapper);
+//        return count > 0;
+//    }
+
 }
 
 

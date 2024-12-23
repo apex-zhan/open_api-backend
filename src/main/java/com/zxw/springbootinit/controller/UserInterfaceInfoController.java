@@ -226,8 +226,8 @@ public class UserInterfaceInfoController {
 //            }
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
+        //用户自己的client
         com.zxw.openapiclientsdk.client.openApiClient NewopenApiClient = new openApiClient(accessKey, secretKey);
-
         Gson gson = new Gson();
         com.zxw.openapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.zxw.openapiclientsdk.model.User.class);
         String userNameByPost = NewopenApiClient.getUserNameByPost(user);

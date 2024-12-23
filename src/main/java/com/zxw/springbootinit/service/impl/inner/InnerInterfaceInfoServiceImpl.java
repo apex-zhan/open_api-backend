@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 
 /**
  * 内部接口实现类
+ *
+ * @author MECHREVO
  */
 @DubboService
 public class InnerInterfaceInfoServiceImpl implements InnerInterfaceInfoService {
@@ -21,13 +23,14 @@ public class InnerInterfaceInfoServiceImpl implements InnerInterfaceInfoService 
     private InterfaceInfoMapper interfaceInfoMapper;
 
     @Override
-    public InterfaceInfo getInterfaceInfo(String url, String method) {
+    public InterfaceInfo getInterfaceInfo(String path, String method) {
 //        从数据库中查询模拟接口是否存在（请求路径，请求方法，请求参数，返回接口信息，为空表示不存在）
-        if (StringUtils.isAllBlank(url, method)) {
+        if (StringUtils.isAllBlank(path, method)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求路径和请求方法不能为空");
         }
         QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("url", url).eq("method", method);
+        queryWrapper.eq("url", path);
+        queryWrapper.eq("method", method);
         InterfaceInfo interfaceInfo = interfaceInfoMapper.selectOne(queryWrapper);
         return interfaceInfo;
     }

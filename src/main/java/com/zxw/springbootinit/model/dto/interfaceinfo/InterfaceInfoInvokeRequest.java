@@ -2,11 +2,14 @@ package com.zxw.springbootinit.model.dto.interfaceinfo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 接口调用请求
+ * @author MECHREVO
  */
 @Data
-public class InterfaceInfoInvokeRequest {
+public class InterfaceInfoInvokeRequest implements Serializable {
     /**
      * 主键
      */
@@ -17,4 +20,4 @@ public class InterfaceInfoInvokeRequest {
      */
     private String userRequestParams;
 
-}
+    private static final long serialVersionUID = 1L;}

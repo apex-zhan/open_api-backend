@@ -1,0 +1,78 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /api
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - AddResponseHeader=source, zxw
+      routes:
+        - id: api_route
+          uri: http://localhost:8123
+          predicates:
+            - Path=/api/**
+
+      #        - id: path_route
+      #          uri: https://baidu.com
+      #          predicates:
+      #            - Path=/api/**
+      #
+      #        - id: path_route2
+      #          uri: https://bing.com
+      #          predicates:
+      #            - Path=/baidu/**
+
+      #        - id: before_route
+      #          uri: https://baidu.com
+      #          predicates:
+      #            - After=2024-11-28T17:42:47.789-07:00[America/Denver]
+
+
+
+    #        降级：
+    #        - id: add_request_header_route
+    #          uri: http://localhost:8123
+    #          predicates:
+    #            - Path=/api/**
+    #          filters:
+    #            - AddRequestHeader=zxw,swag
+    #            - AddRequestParameter=name,king
+    #            # - CircuitBreaker=myCircuitBreaker
+    #            - name: CircuitBreaker
+    #              args:
+    #                name: myCircuitBreaker
+    #                fallbackUri: forward:/fallback
+    #                  - RewritePath=/consumingServiceEndpoint, /backingServiceEndpoint
+    #        - id: zxw-fallback
+    #          uri: http://baidu.com
+    #          predicates:
+    #            - Path=/fallback
+dubbo:
+  application:
+    name: open_api-backend
+  protocol:
+    host: 127.0.0.1
+    name: dubbo
+    port: -1    # 随机端口
+  registry:
+    address: nacos://localhost:8848
+    id: nacos-registry
+  cache:
+    # 更改缓存目录
+    file: D:/mavenn/.m2/.dubbo.bak
+
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+    reactor.netty: DEBUG
+
+management.endpoints.web.exposure.include: '*'
+
+

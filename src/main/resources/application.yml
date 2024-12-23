@@ -15,7 +15,7 @@ spring:
     # todo 取消注释开启分布式 session（须先配置 Redis）
     # store-type: redis
     # 30 天过期
-    timeout: 2592000
+    timeout: 25920000
   # 数据库配置
   # todo 需替换配置
   datasource:
@@ -25,12 +25,12 @@ spring:
     password: root
   # Redis 配置
   # todo 需替换配置，然后取消注释
-  #  redis:
-  #    database: 1
-  #    host: localhost
-  #    port: 6379
-  #    timeout: 5000
-  #    password: 123456
+  #    redis:
+  #      database: 1
+  #      host: localhost
+  #      port: 6379
+  #      timeout: 5000
+  #      password:
   # Elasticsearch 配置
   # todo 需替换配置，然后取消注释
   #  elasticsearch:
@@ -100,6 +100,8 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.zxw.springbootinit.controller
+
+#仅供测试使用,实际根据登录用户调用ak和sk
 openapi:
   client:
     access-key: 123
@@ -117,8 +119,8 @@ dubbo:
     name: dubbo
     port: -1    # 随机端口
   registry:
-      address: nacos://localhost:8848
-      id: nacos-registry
+    address: nacos://localhost:8848
+    id: nacos-registry
   cache:
-        # 更改缓存目录
+    # 更改缓存目录
     file: D:/mavenn/.m2/.dubbo

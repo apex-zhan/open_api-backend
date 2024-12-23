@@ -4,9 +4,8 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- * 删除请求
+ * 通用的删除请求类
  *
- 
  */
 @Data
 public class DeleteRequest implements Serializable {

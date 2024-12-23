@@ -28,7 +28,7 @@ public class InnerUserServiceImpl implements InnerUserService {
         }
         // 根据accessKey和secretKey获取用户信息
         QueryWrapper<User> userqueryWrapper = new QueryWrapper<>();
-        userqueryWrapper.eq("access_key", accessKey);
+        userqueryWrapper.eq("accessKey", accessKey);
         User user = userMapper.selectOne(userqueryWrapper);
         return user;
     }

@@ -276,11 +276,10 @@ public class InterfaceInfoController {
         }
         if (interfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue()) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
-        }
+        } 
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
         com.zxw.openapiclientsdk.client.openApiClient NewopenApiClient = new openApiClient(accessKey, secretKey);
-
         Gson gson = new Gson();
         com.zxw.openapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.zxw.openapiclientsdk.model.User.class);
         String userNameByPost = NewopenApiClient.getUserNameByPost(user);

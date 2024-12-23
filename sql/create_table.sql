@@ -71,7 +71,7 @@ create table if not exists user
 # create database if not exists openapi;
 
 -- 切换库
-use openapi;
+# use openapi;
 
 # -- 用户表
 # create table if not exists user
@@ -89,6 +89,20 @@ use openapi;
 #     constraint uni_userAccount
 #         unique (userAccount)
 # ) comment '用户';
+
+
+create table if not exists `user_interface_info`
+(
+    `id` bigint not null auto_increment comment '主键',
+    `userId` bigint not null comment '调用用户 id',
+    `interfaceInfoId` bigint not null comment '接口 id',
+    `totalNum` int default 0 not null comment '总 调用次数',
+    `leftNum` int default 0 not null comment '剩余调用次数',
+    `status` int default 0 not null comment '接口状态（0-关闭，1-开启）',
+    createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete tinyint default 0 not null comment '是否删除'
+)comment '用户接口调用关系';
 
 
 insert into openapi.`interface_info` (`name`, `description`, `url`, `requestHeader`, `responseHeader`, `status`,
