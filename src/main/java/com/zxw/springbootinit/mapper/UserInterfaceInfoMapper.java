@@ -1,7 +1,10 @@
 package com.zxw.springbootinit.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zxw.openapicommon.model.entity.InterfaceInfo;
 import com.zxw.openapicommon.model.entity.UserInterfaceInfo;
+
+import java.util.List;
 
 
 /**
@@ -11,7 +14,7 @@ import com.zxw.openapicommon.model.entity.UserInterfaceInfo;
 * @Entity UserInterfaceInfo
 */
 public interface UserInterfaceInfoMapper extends BaseMapper<UserInterfaceInfo> {
-
+    List<UserInterfaceInfo> listTopInvokeInterfaceInfo(int limit);
 }
 
 

@@ -3,6 +3,8 @@ package com.zxw.springbootinit.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zxw.openapicommon.model.entity.InterfaceInfo;
 
+import java.util.List;
+
 
 /**
  * @author zxw
