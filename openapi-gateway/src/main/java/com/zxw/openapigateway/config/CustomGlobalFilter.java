@@ -1,5 +1,8 @@
 package com.zxw.openapigateway.config;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.context.ContextUtil;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zxw.openapiclientsdk.utils.SignUtils;
 import com.zxw.openapicommon.model.entity.InterfaceInfo;
 import com.zxw.openapicommon.model.entity.User;
@@ -16,7 +19,6 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -26,7 +28,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -37,6 +38,17 @@ import java.util.List;
  * @author MECHREVO
  * 全局过滤
  * Ordered 作用是定义过滤器的执行顺序
+ * 全局过滤器 - 成功拦截所有进入该网关的请求
+ * 完成以下功能:
+ * 1 - 用户发送请求到 API 网关
+ * 2 - 请求日志
+ * 3 - (黑白名单）
+ * 4 - 用户鉴权 (判断 ak,sk 是否合法)
+ * 5 - 请求的模拟接口是否存在
+ * 6 - 请求转发，调用模拟接口
+ * 7 - 响应日志
+ * 8 - 调用成功，接口调用次数 + 1
+ * 9 - 调用失败，返回一个规范的错误码
  */
 @Slf4j
 @Component
@@ -51,6 +63,14 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
     private static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1");
     private static final String INTERFACE_HOST = "http://localhost:8123";
 
+
+    // 对应的 `CustomGlobalHandler` 函数需要位于 `ServerHttpResponseUtils` 类中，并且必须为 static 函数.
+    //定义资源，并提供可选的异常处理和 fallback 配置项
+    @SentinelResource(
+            value = "/api/name/user",
+            blockHandler = "CustomGlobalHandler",
+            blockHandlerClass = CustomGlobalHandler.class
+    )
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 //        1. 用户发送请求到 api 网关
@@ -156,6 +176,11 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      */
     public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain, Long interfaceInfoId, Long UserId) {
         try {
+            log.info("custom global filter");
+            // 显式定义上下文,统一簇点链路
+            ContextUtil.enter("/api/name/user");
+
+            // 1. 请求转发，调用模拟接口
             ServerHttpResponse originalResponse = exchange.getResponse();
             // 缓存数据的工厂
             DataBufferFactory bufferFactory = originalResponse.bufferFactory();
@@ -210,6 +235,11 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         }
     }
 
+    /**
+     * Ordered 作用是定义过滤器的执行顺序
+     *
+     * @return
+     */
     @Override
     public int getOrder() {
         return -1;

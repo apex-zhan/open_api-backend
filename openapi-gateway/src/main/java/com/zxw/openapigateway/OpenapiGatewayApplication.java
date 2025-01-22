@@ -1,5 +1,8 @@
 package com.zxw.openapigateway;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zxw.springbootinit.provider.DemoService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
@@ -30,6 +33,17 @@ public class OpenapiGatewayApplication {
         OpenapiGatewayApplication gatewayApplication = context.getBean(OpenapiGatewayApplication.class);
         String result = gatewayApplication.doSayHello("world");
         System.out.println("result: " + result);
+
+
+        //sentinel限流
+        try (Entry entry = SphU.entry("HelloWorld")) {
+            // Your business logic here.
+            System.out.println("hello world");
+        } catch (BlockException e) {
+            // Handle rejected request.
+            e.printStackTrace();
+        }
+        // try-with-resources auto exit
 
     }
 
