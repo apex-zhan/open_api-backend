@@ -3,7 +3,7 @@ package com.zxw.springbootinit.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zxw.openapicommon.model.entity.User;
-import com.zxw.springbootinit.model.dto.user.UserQueryRequest;
+import com.zxw.springbootinit.model.dto.user.*;
 import com.zxw.springbootinit.model.vo.LoginUserVO;
 import com.zxw.springbootinit.model.vo.UserUpdateSignVo;
 import com.zxw.springbootinit.model.vo.UserVO;
@@ -118,6 +118,42 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
-
+    /**
+     * 更新用户的（公钥私钥）签名
+     * @param request
+     * @return
+     */
     UserUpdateSignVo updateUserSign(HttpServletRequest request);
+    /**
+     * 用户电子邮件注册
+     *
+     * @param userEmailRegisterRequest 用户电子邮件注册请求
+     * @return long
+     */
+    long userEmailRegister(UserEmailRegisterRequest userEmailRegisterRequest);
+
+    /**
+     * 邮箱登录
+     * @param userEmailLoginRequest
+     * @param request
+     * @return
+     */
+    UserVO userEmailLogin(UserEmailLoginRequest userEmailLoginRequest, HttpServletRequest request);
+
+    /**
+     * 用户绑定电子邮件
+     *
+     * @param userBindEmailRequest 用户电子邮件登录请求
+     * @param request               要求
+     * @return {@link UserVO}
+     */
+    UserVO userBindEmail(UserBindEmailRequest userBindEmailRequest, HttpServletRequest request);
+    /**
+     * 用户取消绑定电子邮件
+     *
+     * @param request                要求
+     * @param userUnBindEmailRequest 用户取消绑定电子邮件请求
+     * @return {@link UserVO}
+     */
+    UserVO userUnBindEmail(UserUnBindEmailRequest userUnBindEmailRequest, HttpServletRequest request);
 }

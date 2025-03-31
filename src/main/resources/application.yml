@@ -37,11 +37,27 @@ spring:
   #    uris: http://localhost:9200
   #    username: root
   #    password: 123456
+
   # 文件上传
   servlet:
     multipart:
       # 大小限制
       max-file-size: 10MB
+
+  mail:
+    host: smtp.qq.com
+    email-from: 3327332153@qq.com
+    username: 3327332153@qq.com
+    password:
+    properties:
+      mail:
+        smtp:
+          ssl: true
+          auth: true
+          protocols: TLSv1.2
+        debug: true
+    default-encoding: utf-8
+
 server:
   address: 127.0.0.1
   port: 8101
@@ -51,6 +67,7 @@ server:
     session:
       cookie:
         max-age: 2592000
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

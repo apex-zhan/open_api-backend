@@ -11,7 +11,7 @@ import com.zxw.springbootinit.common.ErrorCode;
 import com.zxw.springbootinit.constant.CommonConstant;
 import com.zxw.springbootinit.exception.BusinessException;
 import com.zxw.springbootinit.mapper.UserMapper;
-import com.zxw.springbootinit.model.dto.user.UserQueryRequest;
+import com.zxw.springbootinit.model.dto.user.*;
 import com.zxw.springbootinit.model.enums.UserRoleEnum;
 import com.zxw.springbootinit.model.vo.LoginUserVO;
 import com.zxw.springbootinit.model.vo.UserUpdateSignVo;
@@ -309,6 +309,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userUpdateSignVo.setAccessKey(accessKey);
         userUpdateSignVo.setSecretKey(secretKey);
         return userUpdateSignVo;
+    }
+
+    @Override
+    public long userEmailRegister(UserEmailRegisterRequest userEmailRegisterRequest) {
+        return 0;
+    }
+
+    @Override
+    public UserVO userEmailLogin(UserEmailLoginRequest userEmailLoginRequest, HttpServletRequest request) {
+        return null;
+    }
+
+    @Override
+    public UserVO userBindEmail(UserBindEmailRequest userBindEmailRequest, HttpServletRequest request) {
+        return null;
+    }
+
+    @Override
+    public UserVO userUnBindEmail(UserUnBindEmailRequest userUnBindEmailRequest, HttpServletRequest request) {
+        return null;
     }
 
 
